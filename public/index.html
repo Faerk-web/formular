@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gratis tilbud – Færk Webbureau</title>
+  <meta name="description" content="Få et gratis, uforpligtende tilbud på din næste hjemmeside fra Færk Webbureau." />
+  <style>
+    /* ── Reset & base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:   #1e3a5f;
+      --navy-l: #2a4f7e;
+      --gold:   #f0a500;
+      --gold-l: #f5bc3b;
+      --bg:     #f5f7fa;
+      --surface:#ffffff;
+      --border: #e2e8f0;
+      --text:   #1a202c;
+      --muted:  #718096;
+      --success:#22c55e;
+      --error:  #ef4444;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(30,58,95,.10);
+      --trans:  .25s ease;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    /* ── Top header ─────────────────────────────────────────────────── */
+    .site-header {
+      background: var(--navy);
+      color: #fff;
+      text-align: center;
+      padding: 28px 16px 22px;
+    }
+    .site-header h1 { font-size: clamp(20px,4vw,28px); font-weight: 700; letter-spacing: -.5px; }
+    .site-header p  { font-size: 14px; opacity: .75; margin-top: 4px; }
+
+    /* ── Layout ─────────────────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      gap: 24px;
+      max-width: 1100px;
+      margin: 32px auto 0;
+      padding: 0 16px;
+      align-items: flex-start;
+    }
+
+    /* ── Wizard card ─────────────────────────────────────────────────── */
+    .wizard-card {
+      flex: 1 1 0;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* ── Progress header ─────────────────────────────────────────────── */
+    .progress-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 20px 28px 16px;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      opacity: .8;
+      margin-bottom: 10px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,.2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 99px;
+      transition: width var(--trans);
+    }
+    .step-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      background: rgba(255,255,255,.15);
+      color: rgba(255,255,255,.6);
+      cursor: default;
+      transition: var(--trans);
+      flex-shrink: 0;
+    }
+    .step-dot.done   { background: var(--gold); color: var(--navy); }
+    .step-dot.active { background: #fff; color: var(--navy); box-shadow: 0 0 0 3px rgba(255,255,255,.3); }
+
+    /* ── Step body ───────────────────────────────────────────────────── */
+    .step-body { padding: 32px 28px 28px; }
+    .step { display: none; animation: fadeIn .3s ease; }
+    .step.active { display: block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+    .step-title {
+      font-size: 22px; font-weight: 700;
+      color: var(--navy); margin-bottom: 6px;
+    }
+    .step-subtitle {
+      font-size: 14px; color: var(--muted); margin-bottom: 28px;
+    }
+
+    /* ── Form controls ───────────────────────────────────────────────── */
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block; font-size: 14px; font-weight: 600;
+      color: var(--text); margin-bottom: 6px;
+    }
+    label .req { color: var(--error); margin-left: 2px; }
+    input[type=text],
+    input[type=email],
+    input[type=tel],
+    input[type=url],
+    input[type=number],
+    select,
+    textarea {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px; color: var(--text);
+      background: #fff;
+      transition: border-color var(--trans), box-shadow var(--trans);
+      outline: none;
+      font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(30,58,95,.12);
+    }
+    input.invalid, select.invalid, textarea.invalid {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.12);
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    .field-error { font-size: 12px; color: var(--error); margin-top: 4px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width:600px){ .form-row { grid-template-columns: 1fr; } }
+
+    /* ── Radio / checkbox cards ──────────────────────────────────────── */
+    .card-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
+    .card-option { position: relative; }
+    .card-option input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .card-option label {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 14px 18px; border: 1.5px solid var(--border);
+      border-radius: 12px; cursor: pointer;
+      font-weight: 600; font-size: 13px; text-align: center;
+      min-width: 90px; transition: var(--trans);
+      user-select: none;
+    }
+    .card-option label .icon { font-size: 22px; margin-bottom: 6px; }
+    .card-option input:checked + label {
+      border-color: var(--navy);
+      background: rgba(30,58,95,.06);
+      color: var(--navy);
+    }
+    .card-option input:checked + label .check-mark { display: inline-block; }
+    .card-option label:hover { border-color: var(--navy-l); }
+
+    /* ── Add-on checkboxes ───────────────────────────────────────────── */
+    .addon-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .addon-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      cursor: pointer; transition: var(--trans);
+    }
+    .addon-item:hover { border-color: var(--navy-l); }
+    .addon-item.selected { border-color: var(--navy); background: rgba(30,58,95,.05); }
+    .addon-item input[type=checkbox] {
+      width: 18px; height: 18px; accent-color: var(--navy);
+      flex-shrink: 0; cursor: pointer;
+    }
+    .addon-item label {
+      flex: 1; cursor: pointer; margin: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-weight: 500; font-size: 14px;
+    }
+    .addon-price { color: var(--navy); font-weight: 700; font-size: 13px; white-space: nowrap; }
+    .addon-qty {
+      margin-top: 8px; padding: 0 16px 12px 46px;
+      display: none;
+    }
+    .addon-qty.show { display: block; }
+    .addon-qty input { max-width: 120px; }
+
+    /* ── Section heading inside step ─────────────────────────────────── */
+    .section-label {
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--muted); margin: 24px 0 10px;
+    }
+
+    /* ── File upload ─────────────────────────────────────────────────── */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px; padding: 36px 20px;
+      text-align: center; cursor: pointer;
+      transition: var(--trans);
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--navy);
+      background: rgba(30,58,95,.04);
+    }
+    .drop-zone .dz-icon { font-size: 36px; color: var(--muted); margin-bottom: 8px; }
+    .drop-zone p { font-size: 14px; color: var(--muted); margin: 0; }
+    .drop-zone p strong { color: var(--navy); }
+    .drop-zone small { font-size: 12px; color: var(--muted); }
+    #file-input { display: none; }
+    .file-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .file-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; background: #f8f9fa;
+      border-radius: 10px; font-size: 13px;
+    }
+    .file-item .fi-name { flex:1; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .file-item .fi-size { color:var(--muted); white-space:nowrap; }
+    .file-item .fi-remove {
+      background:none; border:none; cursor:pointer;
+      color:var(--muted); font-size:18px; line-height:1;
+      padding:0 2px; transition:color var(--trans);
+    }
+    .file-item .fi-remove:hover { color:var(--error); }
+    .file-error { color:var(--error); font-size:13px; margin-top:8px; }
+
+    /* ── Summary ─────────────────────────────────────────────────────── */
+    .summary-section { margin-bottom: 20px; }
+    .summary-section h3 {
+      font-size: 14px; font-weight: 700; color: var(--navy);
+      margin-bottom: 8px; text-transform: uppercase; letter-spacing: .05em;
+    }
+    .summary-row {
+      display: flex; gap: 12px; padding: 7px 0;
+      border-bottom: 1px solid var(--border); font-size: 14px;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-key { color: var(--muted); width: 160px; flex-shrink: 0; }
+    .summary-val { flex: 1; font-weight: 500; word-break: break-word; }
+
+    /* ── Navigation buttons ──────────────────────────────────────────── */
+    .nav-buttons {
+      display: flex; gap: 12px; margin-top: 32px;
+      justify-content: space-between; align-items: center;
+    }
+    .btn {
+      padding: 14px 28px; border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: var(--trans); font-family: inherit;
+    }
+    .btn-prev {
+      background: transparent; color: var(--muted);
+      border: 1.5px solid var(--border);
+    }
+    .btn-prev:hover { border-color: var(--navy); color: var(--navy); }
+    .btn-next {
+      background: var(--navy); color: #fff;
+      margin-left: auto;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-next:hover { background: var(--navy-l); }
+    .btn-submit {
+      background: var(--gold); color: var(--navy);
+      margin-left: auto;
+    }
+    .btn-submit:hover { background: var(--gold-l); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Sticky price box (sidebar) ──────────────────────────────────── */
+    .price-sidebar {
+      width: 260px; flex-shrink: 0;
+      position: sticky; top: 24px;
+    }
+    .price-box {
+      background: var(--navy); color: #fff;
+      border-radius: var(--radius); padding: 24px 20px;
+      box-shadow: var(--shadow);
+    }
+    .price-box-label { font-size: 13px; opacity: .7; margin-bottom: 4px; }
+    .price-amount {
+      font-size: 32px; font-weight: 800;
+      color: var(--gold); line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .price-note { font-size: 11px; opacity: .55; }
+    .price-breakdown { margin-top: 20px; }
+    .pb-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .pb-row:last-child { border-bottom: none; }
+    .pb-label { opacity: .75; }
+    .pb-value { font-weight: 600; }
+    .pb-total { font-weight: 800; color: var(--gold); }
+
+    @media(max-width: 860px) {
+      .layout { flex-direction: column; }
+      .price-sidebar { width: 100%; position: static; order: -1; }
+      .price-box { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px 20px; }
+      .price-box-header { flex: 1; min-width: 120px; }
+      .price-breakdown { width: 100%; margin-top: 12px; }
+    }
+
+    /* ── Success screen ──────────────────────────────────────────────── */
+    #success-screen {
+      display: none;
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 60px 40px;
+      text-align: center;
+    }
+    #success-screen.show { display: block; }
+    .success-icon { font-size: 64px; margin-bottom: 20px; }
+    .success-title { font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .success-msg   { font-size: 16px; color: var(--muted); max-width: 480px; margin: 0 auto; line-height: 1.6; }
+
+    /* ── Microcopy reassurance ───────────────────────────────────────── */
+    .reassurance {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--muted); margin-top: 16px;
+    }
+    .reassurance-icon { font-size: 16px; }
+
+    /* ── Spinner ─────────────────────────────────────────────────────── */
+    .spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- ── Site header ──────────────────────────────────────────────────────────── -->
+<header class="site-header">
+  <h1>Færk Webbureau – Gratis tilbud</h1>
+  <p>Udfyld formularen og modtag et skræddersyet tilbud inden for 24 timer</p>
+</header>
+
+<!-- ── Main layout ──────────────────────────────────────────────────────────── -->
+<div class="layout">
+
+  <!-- Price sidebar -->
+  <aside class="price-sidebar">
+    <div class="price-box">
+      <div class="price-box-header">
+        <p class="price-box-label">Estimeret pris</p>
+        <p class="price-amount" id="price-display">4.999 kr.</p>
+        <p class="price-note">Priser starter fra 4.999 kr.</p>
+      </div>
+      <div class="price-breakdown" id="price-breakdown">
+        <div class="pb-row">
+          <span class="pb-label">Grundpris</span>
+          <span class="pb-value">4.999 kr.</span>
+        </div>
+        <!-- Add-on rows injected here -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- Wizard card -->
+  <main class="wizard-card" id="wizard-card">
+
+    <!-- Progress header -->
+    <div class="progress-header">
+      <div class="progress-label">
+        <span id="progress-text">Trin 1 af 8</span>
+        <span id="progress-pct">12%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:12%"></div>
+      </div>
+      <div class="step-dots" id="step-dots">
+        <!-- Dots injected by JS -->
+      </div>
+    </div>
+
+    <!-- Step body -->
+    <div class="step-body">
+
+      <!-- ── STEP 1: Kontaktinfo ──────────────────────────────────────── -->
+      <div class="step active" id="step-1" data-step="1">
+        <h2 class="step-title">Kontaktoplysninger</h2>
+        <p class="step-subtitle">Fortæl os hvem du er, så vi ved hvem vi svarer. 🙌</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Navn <span class="req">*</span></label>
+            <input type="text" id="name" placeholder="Dit fulde navn" required />
+            <p class="field-error" id="err-name"></p>
+          </div>
+          <div class="form-group">
+            <label for="company">Virksomhed</label>
+            <input type="text" id="company" placeholder="Virksomhedens navn" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">E-mail <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="din@email.dk" required />
+            <p class="field-error" id="err-email"></p>
+          </div>
+          <div class="form-group">
+            <label for="phone">Telefon</label>
+            <input type="tel" id="phone" placeholder="+45 12 34 56 78" />
+          </div>
+        </div>
+
+        <div class="reassurance">
+          <span class="reassurance-icon">🔒</span>
+          Dine oplysninger deles ikke med tredjepart og bruges kun til at besvare din forespørgsel.
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Om virksomheden ─────────────────────────────────── -->
+      <div class="step" id="step-2" data-step="2">
+        <h2 class="step-title">Om virksomheden</h2>
+        <p class="step-subtitle">Hjælp os med at forstå din forretning og dine mål. 🎯</p>
+
+        <div class="form-group">
+          <label for="industry">Branche <span class="req">*</span></label>
+          <select id="industry" required>
+            <option value="">Vælg branche...</option>
+            <option>Detailhandel / E-handel</option>
+            <option>Håndværk & service</option>
+            <option>Sundhed & velvære</option>
+            <option>Restauration & café</option>
+            <option>Rådgivning & konsulentvirksomhed</option>
+            <option>Ejendom & bolig</option>
+            <option>Uddannelse & undervisning</option>
+            <option>IT & teknologi</option>
+            <option>Kreativ industri</option>
+            <option>Nonprofit / Forening</option>
+            <option>Anden branche</option>
+          </select>
+          <p class="field-error" id="err-industry"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="companySize">Antal ansatte</label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="companySize" id="size-solo" value="Solo (1 person)" />
+              <label for="size-solo"><span class="icon">👤</span>Solo</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="companySize" id="size-small" value="Lille (2-10)" />
+              <label for="size-small"><span class="icon">👥</span>2–10</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="companySize" id="size-mid" value="Mellemstor (11-50)" />
+              <label for="size-mid"><span class="icon">🏢</span>11–50</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="companySize" id="size-large" value="Stor (50+)" />
+              <label for="size-large"><span class="icon">🏭</span>50+</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="companyDescription">Kort beskrivelse af virksomheden <span class="req">*</span></label>
+          <textarea id="companyDescription" placeholder="Hvad laver I? Hvad gør jer unikke?" required></textarea>
+          <p class="field-error" id="err-companyDescription"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="goals">Hvad er målet med den nye hjemmeside? <span class="req">*</span></label>
+          <textarea id="goals" placeholder="F.eks. flere kunder, bedre branding, online booking…" required></textarea>
+          <p class="field-error" id="err-goals"></p>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Nuværende hjemmeside ───────────────────────────── -->
+      <div class="step" id="step-3" data-step="3">
+        <h2 class="step-title">Nuværende hjemmeside</h2>
+        <p class="step-subtitle">Har du allerede en hjemmeside? Hvad virker, og hvad virker ikke? 🔍</p>
+
+        <div class="form-group">
+          <label>Har du en eksisterende hjemmeside?</label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="hasWebsite" id="hw-yes" value="Ja" />
+              <label for="hw-yes"><span class="icon">✅</span>Ja</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="hasWebsite" id="hw-no" value="Nej" />
+              <label for="hw-no"><span class="icon">🆕</span>Nej, ny</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" id="website-url-group">
+          <label for="websiteUrl">URL til nuværende hjemmeside</label>
+          <input type="url" id="websiteUrl" placeholder="https://dinhjemmeside.dk" />
+        </div>
+
+        <div class="form-group">
+          <label for="whatsMissing">Hvad mangler den nuværende løsning, eller hvad ønsker du forbedret?</label>
+          <textarea id="whatsMissing" placeholder="F.eks. mobiloptimering, hurtigere load, bedre design, SEO…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inspiration">Links til hjemmesider du er inspireret af</label>
+          <textarea id="inspiration" placeholder="F.eks. https://eksempel.dk, https://andet.dk" rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: Omfang & funktioner ───────────────────────────── -->
+      <div class="step" id="step-4" data-step="4">
+        <h2 class="step-title">Omfang & funktioner</h2>
+        <p class="step-subtitle">Hvad skal hjemmesiden indeholde og kunne? 📋</p>
+
+        <div class="form-group">
+          <label for="pageCount">Antal undersider (ca.) <span class="req">*</span></label>
+          <select id="pageCount" required>
+            <option value="">Vælg...</option>
+            <option>1-3 sider</option>
+            <option>4-6 sider</option>
+            <option>7-10 sider</option>
+            <option>11-20 sider</option>
+            <option>Mere end 20 sider</option>
+          </select>
+          <p class="field-error" id="err-pageCount"></p>
+        </div>
+
+        <div class="form-group">
+          <label>Hvilke funktioner skal hjemmesiden have? (vælg alle der passer)</label>
+          <div class="card-group" id="features-group">
+            <div class="card-option">
+              <input type="checkbox" name="features" id="f-contact" value="Kontaktformular" />
+              <label for="f-contact"><span class="icon">📬</span>Kontaktformular</label>
+            </div>
+            <div class="card-option">
+              <input type="checkbox" name="features" id="f-shop" value="Webshop" />
+              <label for="f-shop"><span class="icon">🛒</span>Webshop</label>
+            </div>
+            <div class="card-option">
+              <input type="checkbox" name="features" id="f-blog" value="Blog" />
+              <label for="f-blog"><span class="icon">✍️</span>Blog</label>
+            </div>
+            <div class="card-option">
+              <input type="checkbox" name="features" id="f-booking" value="Booking" />
+              <label for="f-booking"><span class="icon">📅</span>Booking</label>
+            </div>
+            <div class="card-option">
+              <input type="checkbox" name="features" id="f-gallery" value="Galleri" />
+              <label for="f-gallery"><span class="icon">🖼️</span>Galleri</label>
+            </div>
+            <div class="card-option">
+              <input type="checkbox" name="features" id="f-map" value="Kort" />
+              <label for="f-map"><span class="icon">📍</span>Kort</label>
+            </div>
+            <div class="card-option">
+              <input type="checkbox" name="features" id="f-nl" value="Nyhedsbrev" />
+              <label for="f-nl"><span class="icon">📧</span>Nyhedsbrev</label>
+            </div>
+            <div class="card-option">
+              <input type="checkbox" name="features" id="f-search" value="Søgefunktion" />
+              <label for="f-search"><span class="icon">🔍</span>Søgning</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="languages">Sprog på hjemmesiden</label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="languages" id="lang-da" value="Dansk" />
+              <label for="lang-da"><span class="icon">🇩🇰</span>Dansk</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="languages" id="lang-en" value="Engelsk" />
+              <label for="lang-en"><span class="icon">🇬🇧</span>Engelsk</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="languages" id="lang-both" value="Dansk & Engelsk" />
+              <label for="lang-both"><span class="icon">🌍</span>Begge</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="languages" id="lang-other" value="Andet" />
+              <label for="lang-other"><span class="icon">💬</span>Andet</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 5: Design & indhold ───────────────────────────────── -->
+      <div class="step" id="step-5" data-step="5">
+        <h2 class="step-title">Design & indhold</h2>
+        <p class="step-subtitle">Hvad skal din hjemmeside udstråle? 🎨</p>
+
+        <div class="form-group">
+          <label>Designstil <span class="req">*</span></label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="designStyle" id="ds-minimal" value="Minimalistisk" />
+              <label for="ds-minimal"><span class="icon">⬜</span>Minimalistisk</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="designStyle" id="ds-bold" value="Modig & farverig" />
+              <label for="ds-bold"><span class="icon">🌈</span>Modig & farverig</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="designStyle" id="ds-classic" value="Klassisk & professionel" />
+              <label for="ds-classic"><span class="icon">🎩</span>Klassisk</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="designStyle" id="ds-playful" value="Legende & moderne" />
+              <label for="ds-playful"><span class="icon">✨</span>Legende</label>
+            </div>
+          </div>
+          <p class="field-error" id="err-designStyle"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="colorPreferences">Farveønsker eller eksisterende brand-farver</label>
+          <input type="text" id="colorPreferences" placeholder="F.eks. navy blå + guld, eller #1e3a5f, #f0a500" />
+        </div>
+
+        <div class="form-group">
+          <label for="references">Links til hjemmesider du synes ser flotte ud</label>
+          <textarea id="references" placeholder="https://eksempel.dk" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Har du tekst/indhold klar?</label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="contentReady" id="cr-yes" value="Ja, tekst er klar" />
+              <label for="cr-yes"><span class="icon">✅</span>Ja</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="contentReady" id="cr-partial" value="Delvist klar" />
+              <label for="cr-partial"><span class="icon">🔄</span>Delvist</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="contentReady" id="cr-no" value="Nej, skal udarbejdes" />
+              <label for="cr-no"><span class="icon">✍️</span>Nej</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Har du billeder / logo klar?</label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="imagesReady" id="ir-yes" value="Ja" />
+              <label for="ir-yes"><span class="icon">📸</span>Ja</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="imagesReady" id="ir-partial" value="Delvist" />
+              <label for="ir-partial"><span class="icon">🔄</span>Delvist</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="imagesReady" id="ir-no" value="Nej" />
+              <label for="ir-no"><span class="icon">❌</span>Nej</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 6: Teknik & drift ─────────────────────────────────── -->
+      <div class="step" id="step-6" data-step="6">
+        <h2 class="step-title">Teknik & drift</h2>
+        <p class="step-subtitle">Lad os finde den rette tekniske løsning til dig. ⚙️</p>
+
+        <div class="form-group">
+          <label>Foretrukket CMS (indholdsstyringssystem)</label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="cms" id="cms-wp" value="WordPress" />
+              <label for="cms-wp"><span class="icon">🔵</span>WordPress</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="cms" id="cms-shopify" value="Shopify" />
+              <label for="cms-shopify"><span class="icon">🛒</span>Shopify</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="cms" id="cms-custom" value="Skræddersyet" />
+              <label for="cms-custom"><span class="icon">⚡</span>Skræddersyet</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="cms" id="cms-idc" value="Ligegyldigt" />
+              <label for="cms-idc"><span class="icon">🤷</span>Ligegyldigt</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Hosting</label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="hosting" id="h-faerk" value="Færk leverer hosting" />
+              <label for="h-faerk"><span class="icon">🌐</span>Færk leverer</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="hosting" id="h-own" value="Egen hosting" />
+              <label for="h-own"><span class="icon">🖥️</span>Egen hosting</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="hosting" id="h-idc" value="Ved ikke" />
+              <label for="h-idc"><span class="icon">🤷</span>Ved ikke</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="domain">Domæne</label>
+          <input type="text" id="domain" placeholder="F.eks. dinvirksomhed.dk (eller jeg mangler et domæne)" />
+        </div>
+
+        <div class="form-group">
+          <label>Vedligeholdelsesaftale efter lancering?</label>
+          <div class="card-group">
+            <div class="card-option">
+              <input type="radio" name="maintenance" id="m-yes" value="Ja, ønskes" />
+              <label for="m-yes"><span class="icon">🛡️</span>Ja, ønskes</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="maintenance" id="m-no" value="Nej" />
+              <label for="m-no"><span class="icon">🚫</span>Nej</label>
+            </div>
+            <div class="card-option">
+              <input type="radio" name="maintenance" id="m-idc" value="Vil høre mere" />
+              <label for="m-idc"><span class="icon">💬</span>Vil høre mere</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 7: Tilkøb & deadline ─────────────────────────────── -->
+      <div class="step" id="step-7" data-step="7">
+        <h2 class="step-title">Tilkøb & deadline</h2>
+        <p class="step-subtitle">Tilpas din pakke og fortæl os om din tidsplan. 📦</p>
+
+        <!-- Indhold & tekst -->
+        <p class="section-label">Indhold & tekst</p>
+        <div class="addon-group">
+
+          <div class="addon-item" id="addon-row-extraPages">
+            <input type="checkbox" id="addon-extraPages" data-price="500" data-qty-field="extraPagesCount" />
+            <label for="addon-extraPages">
+              <span>Ekstra sider</span>
+              <span class="addon-price">+500 kr. / side</span>
+            </label>
+          </div>
+          <div class="addon-qty" id="qty-extraPages">
+            <label for="extraPagesCount" style="font-size:13px;color:var(--muted);margin-bottom:4px">Antal ekstra sider</label>
+            <input type="number" id="extraPagesCount" min="1" value="1" placeholder="Antal" />
+          </div>
+
+          <div class="addon-item" id="addon-row-blog">
+            <input type="checkbox" id="addon-blog" data-price="1000" />
+            <label for="addon-blog">
+              <span>Blogopsætning</span>
+              <span class="addon-price">+1.000 kr.</span>
+            </label>
+          </div>
+
+          <div class="addon-item" id="addon-row-blogPosts">
+            <input type="checkbox" id="addon-blogPosts" data-price="1200" />
+            <label for="addon-blogPosts">
+              <span>3 blogindlæg (skrevet & uploadet)</span>
+              <span class="addon-price">+1.200 kr.</span>
+            </label>
+          </div>
+
+          <div class="addon-item" id="addon-row-seoBasis">
+            <input type="checkbox" id="addon-seoBasis" data-price="1000" />
+            <label for="addon-seoBasis">
+              <span>SEO basis (metabeskrivelser, alt-tekster, søgeordsanalyse)</span>
+              <span class="addon-price">+1.000 kr.</span>
+            </label>
+          </div>
+
+          <div class="addon-item" id="addon-row-testimonials">
+            <input type="checkbox" id="addon-testimonials" data-price="500" />
+            <label for="addon-testimonials">
+              <span>Kundeudtalelser (sektion + formatering)</span>
+              <span class="addon-price">+500 kr.</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Billeder & video -->
+        <p class="section-label">Billeder & video</p>
+        <div class="addon-group">
+
+          <div class="addon-item" id="addon-row-imageEditing">
+            <input type="checkbox" id="addon-imageEditing" data-price="250" data-qty-field="imageCount" />
+            <label for="addon-imageEditing">
+              <span>Billedredigering</span>
+              <span class="addon-price">+250 kr. / billede</span>
+            </label>
+          </div>
+          <div class="addon-qty" id="qty-imageEditing">
+            <label for="imageCount" style="font-size:13px;color:var(--muted);margin-bottom:4px">Antal billeder</label>
+            <input type="number" id="imageCount" min="1" value="1" placeholder="Antal" />
+          </div>
+
+          <div class="addon-item" id="addon-row-videoEditing">
+            <input type="checkbox" id="addon-videoEditing" data-price="500" data-qty-field="videoCount" />
+            <label for="addon-videoEditing">
+              <span>Videoredigering</span>
+              <span class="addon-price">+500 kr. / video</span>
+            </label>
+          </div>
+          <div class="addon-qty" id="qty-videoEditing">
+            <label for="videoCount" style="font-size:13px;color:var(--muted);margin-bottom:4px">Antal videoer</label>
+            <input type="number" id="videoCount" min="1" value="1" placeholder="Antal" />
+          </div>
+        </div>
+
+        <!-- Integrationer -->
+        <p class="section-label">Integrationer</p>
+        <div class="addon-group">
+
+          <div class="addon-item" id="addon-row-socialFeed">
+            <input type="checkbox" id="addon-socialFeed" data-price="1200" />
+            <label for="addon-socialFeed">
+              <span>Social media feed (Instagram / Facebook)</span>
+              <span class="addon-price">+1.200 kr.</span>
+            </label>
+          </div>
+
+          <div class="addon-item" id="addon-row-bookingSystem">
+            <input type="checkbox" id="addon-bookingSystem" data-price="2800" />
+            <label for="addon-bookingSystem">
+              <span>Booking system</span>
+              <span class="addon-price">+2.800 kr.</span>
+            </label>
+          </div>
+
+          <div class="addon-item" id="addon-row-newsletter">
+            <input type="checkbox" id="addon-newsletter" data-price="800" />
+            <label for="addon-newsletter">
+              <span>Nyhedsbrev (tilmelding + integration)</span>
+              <span class="addon-price">+800 kr.</span>
+            </label>
+          </div>
+
+          <div class="addon-item" id="addon-row-googleMaps">
+            <input type="checkbox" id="addon-googleMaps" data-price="500" />
+            <label for="addon-googleMaps">
+              <span>Google Maps integration</span>
+              <span class="addon-price">+500 kr.</span>
+            </label>
+          </div>
+
+          <div class="addon-item" id="addon-row-fileDownload">
+            <input type="checkbox" id="addon-fileDownload" data-price="400" />
+            <label for="addon-fileDownload">
+              <span>Fil-download sektion (PDF'er, brochurer m.m.)</span>
+              <span class="addon-price">+400 kr.</span>
+            </label>
+          </div>
+
+          <div class="addon-item" id="addon-row-faqSection">
+            <input type="checkbox" id="addon-faqSection" data-price="500" />
+            <label for="addon-faqSection">
+              <span>FAQ sektion</span>
+              <span class="addon-price">+500 kr.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="deadline">Hvornår skal hjemmesiden være færdig?</label>
+          <select id="deadline">
+            <option value="">Vælg tidsramme...</option>
+            <option>Hurtigst muligt (under 2 uger)</option>
+            <option>Inden for 1 måned</option>
+            <option>1-3 måneder</option>
+            <option>3-6 måneder</option>
+            <option>Fleksibelt</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="budget">Samlet budget</label>
+          <select id="budget">
+            <option value="">Vælg budgetramme...</option>
+            <option>Under 10.000 kr.</option>
+            <option>10.000 – 25.000 kr.</option>
+            <option>25.000 – 50.000 kr.</option>
+            <option>50.000 – 100.000 kr.</option>
+            <option>Over 100.000 kr.</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Yderligere bemærkninger eller ønsker</label>
+          <textarea id="notes" placeholder="Er der noget vi ikke har spurgt om, som er vigtigt for dit projekt?"></textarea>
+        </div>
+      </div>
+
+      <!-- ── STEP 8: Upload & bekræftelse ──────────────────────────── -->
+      <div class="step" id="step-8" data-step="8">
+        <h2 class="step-title">Upload & bekræftelse</h2>
+        <p class="step-subtitle">Upload relevante filer og gennemgå din forespørgsel inden du sender. 📎</p>
+
+        <!-- File upload -->
+        <div class="form-group">
+          <label>Upload filer (JPG/PNG, maks. 10 MB pr. fil)</label>
+          <div class="drop-zone" id="drop-zone">
+            <div class="dz-icon">📂</div>
+            <p><strong>Træk & slip filer her</strong> eller klik for at vælge</p>
+            <small>JPG og PNG · Maks. 10 MB pr. fil · Valgfrit</small>
+          </div>
+          <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png" />
+          <div class="file-list" id="file-list"></div>
+          <p class="file-error" id="file-error"></p>
+        </div>
+
+        <!-- Summary -->
+        <div id="summary-container">
+          <div class="summary-section">
+            <h3>Kontaktinfo</h3>
+            <div class="summary-row"><span class="summary-key">Navn</span><span class="summary-val" id="sum-name"></span></div>
+            <div class="summary-row"><span class="summary-key">E-mail</span><span class="summary-val" id="sum-email"></span></div>
+            <div class="summary-row"><span class="summary-key">Telefon</span><span class="summary-val" id="sum-phone"></span></div>
+            <div class="summary-row"><span class="summary-key">Virksomhed</span><span class="summary-val" id="sum-company"></span></div>
+          </div>
+          <div class="summary-section">
+            <h3>Virksomheden</h3>
+            <div class="summary-row"><span class="summary-key">Branche</span><span class="summary-val" id="sum-industry"></span></div>
+            <div class="summary-row"><span class="summary-key">Størrelse</span><span class="summary-val" id="sum-size"></span></div>
+          </div>
+          <div class="summary-section">
+            <h3>Omfang</h3>
+            <div class="summary-row"><span class="summary-key">Antal sider</span><span class="summary-val" id="sum-pages"></span></div>
+            <div class="summary-row"><span class="summary-key">Deadline</span><span class="summary-val" id="sum-deadline"></span></div>
+            <div class="summary-row"><span class="summary-key">Budget</span><span class="summary-val" id="sum-budget"></span></div>
+          </div>
+          <div class="summary-section">
+            <h3>Valgte tilkøb</h3>
+            <div id="sum-addons"><p style="color:var(--muted);font-size:14px">Ingen tilkøb valgt</p></div>
+          </div>
+          <div class="summary-section">
+            <h3>Estimeret pris</h3>
+            <div class="summary-row">
+              <span class="summary-key">Total</span>
+              <span class="summary-val" id="sum-price" style="font-size:20px;font-weight:800;color:var(--navy)"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px">
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-weight:500">
+            <input type="checkbox" id="consent" style="width:18px;height:18px;margin-top:2px;accent-color:var(--navy);flex-shrink:0" />
+            Jeg accepterer, at Færk Webbureau må kontakte mig vedr. denne forespørgsel. <span class="req">*</span>
+          </label>
+          <p class="field-error" id="err-consent"></p>
+        </div>
+
+        <div class="reassurance">
+          <span class="reassurance-icon">🔒</span>
+          Dine data behandles fortroligt i henhold til GDPR.
+        </div>
+      </div>
+
+      <!-- ── Navigation ─────────────────────────────────────────────── -->
+      <div class="nav-buttons">
+        <button class="btn btn-prev" id="btn-prev" style="display:none">← Tilbage</button>
+        <button class="btn btn-next" id="btn-next">Næste trin →</button>
+        <button class="btn btn-submit" id="btn-submit" style="display:none">
+          <span id="submit-label">Send forespørgsel 🚀</span>
+        </button>
+      </div>
+
+    </div><!-- /step-body -->
+  </main><!-- /wizard-card -->
+
+</div><!-- /layout -->
+
+<!-- ── Success screen ───────────────────────────────────────────────────────── -->
+<div class="layout" style="margin-top:24px">
+  <div style="width:260px;flex-shrink:0"></div><!-- spacer matching sidebar -->
+  <div id="success-screen" class="wizard-card">
+    <div class="success-icon">🎉</div>
+    <h2 class="success-title">Tak for din forespørgsel!</h2>
+    <p class="success-msg">
+      Vi har modtaget dine oplysninger og vender tilbage inden for 24 timer.<br><br>
+      Du vil om et øjeblik modtage en bekræftelse på din e-mail.
+    </p>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════════════════════════
+const BASE_PRICE = 4999;
+const TOTAL_STEPS = 8;
+
+const ADDON_CONFIG = {
+  extraPages:   { price: 500,  qty: 'extraPagesCount' },
+  blog:         { price: 1000 },
+  blogPosts:    { price: 1200 },
+  seoBasis:     { price: 1000 },
+  testimonials: { price: 500  },
+  imageEditing: { price: 250,  qty: 'imageCount'  },
+  videoEditing: { price: 500,  qty: 'videoCount'  },
+  socialFeed:   { price: 1200 },
+  bookingSystem:{ price: 2800 },
+  newsletter:   { price: 800  },
+  googleMaps:   { price: 500  },
+  fileDownload: { price: 400  },
+  faqSection:   { price: 500  },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+let currentStep = 1;
+let selectedFiles = [];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════════════════
+function fmt(n) {
+  return n.toLocaleString('da-DK') + ' kr.';
+}
+
+function getVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function getRadio(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+
+function getCheckboxes(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(e => e.value);
+}
+
+function saveProgress() {
+  const data = {
+    name: getVal('name'), company: getVal('company'),
+    email: getVal('email'), phone: getVal('phone'),
+    industry: getVal('industry'),
+    companyDescription: getVal('companyDescription'),
+    goals: getVal('goals'),
+    websiteUrl: getVal('websiteUrl'), whatsMissing: getVal('whatsMissing'),
+    inspiration: getVal('inspiration'),
+    pageCount: getVal('pageCount'), languages: getRadio('languages'),
+    designStyle: getRadio('designStyle'),
+    colorPreferences: getVal('colorPreferences'), references: getVal('references'),
+    cms: getRadio('cms'), hosting: getRadio('hosting'),
+    domain: getVal('domain'), maintenance: getRadio('maintenance'),
+    deadline: getVal('deadline'), budget: getVal('budget'), notes: getVal('notes'),
+    currentStep,
+  };
+  try { localStorage.setItem('faerk_form', JSON.stringify(data)); } catch(_) {}
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem('faerk_form');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    const set = (id, v) => { const el = document.getElementById(id); if (el && v) el.value = v; };
+    const setRadio = (name, v) => { const el = document.querySelector(`input[name="${name}"][value="${v}"]`); if (el) el.checked = true; };
+    set('name', d.name); set('company', d.company);
+    set('email', d.email); set('phone', d.phone);
+    set('industry', d.industry);
+    set('companyDescription', d.companyDescription); set('goals', d.goals);
+    set('websiteUrl', d.websiteUrl); set('whatsMissing', d.whatsMissing);
+    set('inspiration', d.inspiration);
+    set('pageCount', d.pageCount); setRadio('languages', d.languages);
+    setRadio('designStyle', d.designStyle);
+    set('colorPreferences', d.colorPreferences); set('references', d.references);
+    setRadio('cms', d.cms); setRadio('hosting', d.hosting);
+    set('domain', d.domain); setRadio('maintenance', d.maintenance);
+    set('deadline', d.deadline); set('budget', d.budget); set('notes', d.notes);
+  } catch(_) {}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PRICE
+// ═══════════════════════════════════════════════════════════════════════════════
+function calcPrice() {
+  let total = BASE_PRICE;
+  const breakdown = [{ label: 'Grundpris', value: BASE_PRICE }];
+
+  for (const [key, cfg] of Object.entries(ADDON_CONFIG)) {
+    const cb = document.getElementById(`addon-${key}`);
+    if (!cb || !cb.checked) continue;
+
+    let price = cfg.price;
+    let qty = 1;
+    if (cfg.qty) {
+      qty = parseInt(document.getElementById(cfg.qty)?.value || 1, 10);
+      if (isNaN(qty) || qty < 1) qty = 1;
+      price = cfg.price * qty;
+    }
+    total += price;
+
+    const label = cb.closest('.addon-item')?.querySelector('label span:first-child')?.textContent || key;
+    const suffix = cfg.qty ? ` (${qty} stk.)` : '';
+    breakdown.push({ label: label + suffix, value: price });
+  }
+
+  return { total, breakdown };
+}
+
+function updatePriceUI() {
+  const { total, breakdown } = calcPrice();
+
+  document.getElementById('price-display').textContent = fmt(total);
+  document.getElementById('sum-price').textContent = fmt(total);
+
+  const bd = document.getElementById('price-breakdown');
+  bd.innerHTML = breakdown.map((r, i) =>
+    `<div class="pb-row">
+      <span class="pb-label">${r.label}</span>
+      <span class="pb-value">${i === 0 ? fmt(r.value) : '+' + fmt(r.value)}</span>
+    </div>`
+  ).join('');
+
+  if (breakdown.length > 1) {
+    bd.innerHTML += `<div class="pb-row" style="margin-top:4px;border-top:1px solid rgba(255,255,255,.2);padding-top:8px">
+      <span class="pb-label" style="font-weight:700">Total</span>
+      <span class="pb-value pb-total">${fmt(total)}</span>
+    </div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ADD-ONS
+// ═══════════════════════════════════════════════════════════════════════════════
+function initAddons() {
+  for (const [key, cfg] of Object.entries(ADDON_CONFIG)) {
+    const cb = document.getElementById(`addon-${key}`);
+    if (!cb) continue;
+
+    const row   = document.getElementById(`addon-row-${key}`);
+    const qtyEl = cfg.qty ? document.getElementById(`qty-${key}`) : null;
+    const qtyIn = cfg.qty ? document.getElementById(cfg.qty) : null;
+
+    const update = () => {
+      if (row) row.classList.toggle('selected', cb.checked);
+      if (qtyEl) qtyEl.classList.toggle('show', cb.checked);
+      updatePriceUI();
+      saveProgress();
+    };
+
+    cb.addEventListener('change', update);
+    if (qtyIn) qtyIn.addEventListener('input', () => { updatePriceUI(); saveProgress(); });
+    if (row) row.addEventListener('click', e => { if (e.target !== cb) cb.click(); });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PROGRESS UI
+// ═══════════════════════════════════════════════════════════════════════════════
+const STEP_LABELS = [
+  'Kontakt', 'Virksomhed', 'Hjemmeside',
+  'Omfang', 'Design', 'Teknik', 'Tilkøb', 'Bekræftelse'
+];
+
+function initDots() {
+  const container = document.getElementById('step-dots');
+  container.innerHTML = STEP_LABELS.map((_, i) =>
+    `<div class="step-dot" id="dot-${i+1}" title="${STEP_LABELS[i]}">${i+1}</div>`
+  ).join('');
+}
+
+function updateProgress(step) {
+  const pct = Math.round((step / TOTAL_STEPS) * 100);
+  document.getElementById('progress-text').textContent = `Trin ${step} af ${TOTAL_STEPS} – ${STEP_LABELS[step-1]}`;
+  document.getElementById('progress-pct').textContent  = `${pct}%`;
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const dot = document.getElementById(`dot-${i}`);
+    dot.className = 'step-dot';
+    if (i < step)  dot.classList.add('done');
+    if (i === step)dot.classList.add('active');
+  }
+
+  // Buttons
+  document.getElementById('btn-prev').style.display   = step > 1 ? '' : 'none';
+  document.getElementById('btn-next').style.display   = step < TOTAL_STEPS ? '' : 'none';
+  document.getElementById('btn-submit').style.display = step === TOTAL_STEPS ? '' : 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// VALIDATION
+// ═══════════════════════════════════════════════════════════════════════════════
+function clearErrors() {
+  document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+  document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+}
+
+function setError(id, msg, inputId) {
+  const errEl = document.getElementById(`err-${id}`);
+  if (errEl) errEl.textContent = msg;
+  const inp = document.getElementById(inputId || id);
+  if (inp) inp.classList.add('invalid');
+}
+
+function validateStep(step) {
+  clearErrors();
+  let ok = true;
+
+  if (step === 1) {
+    const name = getVal('name');
+    if (!name) { setError('name', 'Navn er påkrævet.'); ok = false; }
+
+    const email = getVal('email');
+    if (!email) { setError('email', 'E-mail er påkrævet.'); ok = false; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('email', 'Ugyldig e-mailadresse.'); ok = false; }
+  }
+
+  if (step === 2) {
+    if (!getVal('industry')) { setError('industry', 'Vælg venligst en branche.'); ok = false; }
+    if (!getVal('companyDescription')) { setError('companyDescription', 'Beskriv venligst din virksomhed.'); ok = false; }
+    if (!getVal('goals')) { setError('goals', 'Angiv venligst målet med hjemmesiden.'); ok = false; }
+  }
+
+  if (step === 4) {
+    if (!getVal('pageCount')) { setError('pageCount', 'Vælg venligst antal undersider.'); ok = false; }
+  }
+
+  if (step === 5) {
+    if (!getRadio('designStyle')) { setError('designStyle', 'Vælg venligst en designstil.', null); ok = false; }
+  }
+
+  if (step === 8) {
+    if (!document.getElementById('consent').checked) {
+      document.getElementById('err-consent').textContent = 'Du skal acceptere for at sende forespørgslen.';
+      ok = false;
+    }
+  }
+
+  return ok;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SUMMARY (step 8)
+// ═══════════════════════════════════════════════════════════════════════════════
+function buildSummary() {
+  document.getElementById('sum-name').textContent    = getVal('name');
+  document.getElementById('sum-email').textContent   = getVal('email');
+  document.getElementById('sum-phone').textContent   = getVal('phone') || '–';
+  document.getElementById('sum-company').textContent = getVal('company') || '–';
+  document.getElementById('sum-industry').textContent= getVal('industry') || '–';
+  document.getElementById('sum-size').textContent    = getRadio('companySize') || '–';
+  document.getElementById('sum-pages').textContent   = getVal('pageCount') || '–';
+  document.getElementById('sum-deadline').textContent= getVal('deadline') || '–';
+  document.getElementById('sum-budget').textContent  = getVal('budget') || '–';
+
+  // Add-ons – build via DOM to avoid innerHTML XSS
+  const addonContainer = document.getElementById('sum-addons');
+  addonContainer.innerHTML = '';
+  let hasAddons = false;
+
+  for (const [key, cfg] of Object.entries(ADDON_CONFIG)) {
+    const cb = document.getElementById(`addon-${key}`);
+    if (!cb || !cb.checked) continue;
+    hasAddons = true;
+
+    const label = cb.closest('.addon-item')?.querySelector('label span:first-child')?.textContent || key;
+    let price = cfg.price;
+    if (cfg.qty) {
+      const qty = parseInt(document.getElementById(cfg.qty)?.value || 1, 10);
+      price = cfg.price * (isNaN(qty) || qty < 1 ? 1 : qty);
+    }
+
+    const row = document.createElement('div');
+    row.className = 'summary-row';
+
+    const keyEl = document.createElement('span');
+    keyEl.className = 'summary-key';
+    keyEl.textContent = label;
+
+    const valEl = document.createElement('span');
+    valEl.className = 'summary-val';
+    valEl.textContent = '+' + fmt(price);
+
+    row.append(keyEl, valEl);
+    addonContainer.appendChild(row);
+  }
+
+  if (!hasAddons) {
+    const p = document.createElement('p');
+    p.style.cssText = 'color:var(--muted);font-size:14px';
+    p.textContent = 'Ingen tilkøb valgt';
+    addonContainer.appendChild(p);
+  }
+
+  updatePriceUI();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FILE UPLOAD
+// ═══════════════════════════════════════════════════════════════════════════════
+function makeFileItem(f, idx) {
+  const item = document.createElement('div');
+  item.className = 'file-item';
+
+  const icon = document.createElement('span');
+  icon.textContent = '📄';
+
+  const name = document.createElement('span');
+  name.className = 'fi-name';
+  name.textContent = f.name; // textContent prevents XSS
+
+  const size = document.createElement('span');
+  size.className = 'fi-size';
+  size.textContent = `${(f.size / 1024 / 1024).toFixed(2)} MB`;
+
+  const btn = document.createElement('button');
+  btn.className = 'fi-remove';
+  btn.title = 'Fjern fil';
+  btn.textContent = '×';
+  btn.dataset.idx = idx;
+  btn.addEventListener('click', e => {
+    selectedFiles.splice(parseInt(e.currentTarget.dataset.idx, 10), 1);
+    renderFileList();
+  });
+
+  item.append(icon, name, size, btn);
+  return item;
+}
+
+function renderFileList() {
+  const list = document.getElementById('file-list');
+  list.innerHTML = '';
+  selectedFiles.forEach((f, i) => list.appendChild(makeFileItem(f, i)));
+}
+
+function addFiles(fileList) {
+  const errEl = document.getElementById('file-error');
+  const errors = [];
+
+  Array.from(fileList).forEach(f => {
+    if (!['image/jpeg','image/png'].includes(f.type)) {
+      errors.push(`"${f.name}" springes over – kun JPG/PNG tilladt.`);
+      return;
+    }
+    if (f.size > 10 * 1024 * 1024) {
+      errors.push(`"${f.name}" springes over – filen er større end 10 MB.`);
+      return;
+    }
+    // Deduplicate by name + size + lastModified
+    const isDupe = selectedFiles.some(x => x.name === f.name && x.size === f.size && x.lastModified === f.lastModified);
+    if (!isDupe) selectedFiles.push(f);
+  });
+
+  errEl.textContent = errors.join(' ');
+  renderFileList();
+}
+
+function initFileUpload() {
+  const dz    = document.getElementById('drop-zone');
+  const input = document.getElementById('file-input');
+
+  dz.addEventListener('click', () => input.click());
+  input.addEventListener('change', e => addFiles(e.target.files));
+
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave',() => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('dragover');
+    addFiles(e.dataTransfer.files);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════════════
+function goToStep(step) {
+  document.querySelector(`.step.active`)?.classList.remove('active');
+  document.getElementById(`step-${step}`).classList.add('active');
+  currentStep = step;
+  updateProgress(step);
+  saveProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (step === 8) buildSummary();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SUBMIT
+// ═══════════════════════════════════════════════════════════════════════════════
+async function submitForm() {
+  if (!validateStep(8)) return;
+
+  const btn   = document.getElementById('btn-submit');
+  const label = document.getElementById('submit-label');
+  btn.disabled = true;
+  label.innerHTML = '<span class="spinner"></span> Sender…';
+
+  const fd = new FormData();
+
+  // All text fields
+  const fields = {
+    name: getVal('name'), company: getVal('company'),
+    email: getVal('email'), phone: getVal('phone'),
+    industry: getVal('industry'), companySize: getRadio('companySize'),
+    companyDescription: getVal('companyDescription'), goals: getVal('goals'),
+    hasWebsite: getRadio('hasWebsite'), websiteUrl: getVal('websiteUrl'),
+    whatsMissing: getVal('whatsMissing'), inspiration: getVal('inspiration'),
+    pageCount: getVal('pageCount'), features: getCheckboxes('features').join(', '),
+    languages: getRadio('languages'), designStyle: getRadio('designStyle'),
+    colorPreferences: getVal('colorPreferences'), references: getVal('references'),
+    contentReady: getRadio('contentReady'), imagesReady: getRadio('imagesReady'),
+    cms: getRadio('cms'), hosting: getRadio('hosting'),
+    domain: getVal('domain'), maintenance: getRadio('maintenance'),
+    deadline: getVal('deadline'), budget: getVal('budget'), notes: getVal('notes'),
+  };
+  for (const [k, v] of Object.entries(fields)) fd.append(k, v);
+
+  // Add-ons as JSON
+  const addOns = {};
+  for (const [key, cfg] of Object.entries(ADDON_CONFIG)) {
+    const cb = document.getElementById(`addon-${key}`);
+    if (cb && cb.checked) {
+      addOns[key] = true;
+      if (cfg.qty) addOns[cfg.qty] = document.getElementById(cfg.qty)?.value || '1';
+    }
+  }
+  fd.append('addOns', JSON.stringify(addOns));
+
+  // Files
+  selectedFiles.forEach(f => fd.append('files', f));
+
+  try {
+    const res  = await fetch('/submit', { method: 'POST', body: fd });
+    const data = await res.json();
+
+    if (data.success) {
+      document.getElementById('wizard-card').style.display = 'none';
+      document.getElementById('success-screen').classList.add('show');
+      try { localStorage.removeItem('faerk_form'); } catch(_) {}
+    } else {
+      throw new Error(data.error || 'Ukendt fejl');
+    }
+  } catch (err) {
+    alert(`Der opstod en fejl: ${err.message}\n\nPrøv igen eller kontakt os direkte på kontakt@faerkwebbureau.dk`);
+    btn.disabled = false;
+    label.textContent = 'Send forespørgsel 🚀';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  initDots();
+  updateProgress(1);
+  initAddons();
+  initFileUpload();
+  updatePriceUI();
+  loadProgress();
+
+  // Save on any input change
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('change', saveProgress);
+    el.addEventListener('input',  saveProgress);
+  });
+
+  // Navigation
+  document.getElementById('btn-next').addEventListener('click', () => {
+    if (validateStep(currentStep)) goToStep(currentStep + 1);
+  });
+  document.getElementById('btn-prev').addEventListener('click', () => {
+    goToStep(currentStep - 1);
+  });
+  document.getElementById('btn-submit').addEventListener('click', submitForm);
+});
+</script>
+</body>
+</html>
